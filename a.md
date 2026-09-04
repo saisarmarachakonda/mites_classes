@@ -233,6 +233,43 @@ READY FOR TRAINING         ← only then
 model.train()
 ```
 
+
+# CHECK 1 — What path does RF-DETR expect?
+
+import os
+import json
+from pathlib import Path
+
+split_dir = DATASET_DIR / "train"
+annotation_file = split_dir / "_annotations.coco.json"
+
+with open(annotation_file, "r", encoding="utf-8") as f:
+    coco = json.load(f)
+
+image_info = coco["images"][0]
+
+file_name = image_info["file_name"]
+
+expected_path = split_dir / file_name
+
+print("=" * 70)
+print("RF-DETR TRAIN IMAGE PATH CHECK")
+print("=" * 70)
+
+print("Dataset root:")
+print(split_dir.resolve())
+
+print("\nCOCO file_name:")
+print(file_name)
+
+print("\nRF-DETR expected path:")
+print(expected_path.resolve())
+
+print("\nDoes expected path exist?")
+print(expected_path.exists())
+
+print("=" * 70)
+
 Also, **don't manually force `num_classes` yet**. Let's first inspect what your pretrained checkpoint and `RFDETRBase` configuration are actually reporting. RF-DETR's weight-loading logic can align model class configuration with checkpoint information, so we should inspect the resulting configuration rather than blindly overriding it. ([GitHub][2])
 
 If you run the **configuration inspection cell** and paste the output here, I can tell you whether the model is correctly configured **before you start training**.
